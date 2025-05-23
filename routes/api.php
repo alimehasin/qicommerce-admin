@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 
 // Auth
@@ -25,4 +26,10 @@ Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
     Route::post('/items', [CartController::class, 'addItem']);
     Route::put('/items/{cartItem}', [CartController::class, 'updateItem']);
     Route::delete('/items/{cartItem}', [CartController::class, 'removeItem']);
+});
+
+// Order
+Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
+    Route::get('/', [OrderController::class, 'index']);
+    Route::post('/checkout', [OrderController::class, 'checkout']);
 });
