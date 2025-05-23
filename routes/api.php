@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
 
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
@@ -13,5 +14,15 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Products
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{id}', [ProductController::class, 'show']);
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/{id}', [ProductController::class, 'show']);
+});
+
+// Cart
+Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index']);
+    Route::post('/items', [CartController::class, 'addItem']);
+    Route::put('/items/{cartItem}', [CartController::class, 'updateItem']);
+    Route::delete('/items/{cartItem}', [CartController::class, 'removeItem']);
+});
