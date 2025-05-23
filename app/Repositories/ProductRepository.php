@@ -18,6 +18,6 @@ class ProductRepository
 
     public function getProductById(int $id): ?Product
     {
-        return $this->model->with('images')->findById($id);
+        return $this->model->with('images')->find($id);
     }
 }
