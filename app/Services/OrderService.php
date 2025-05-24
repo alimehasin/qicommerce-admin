@@ -17,9 +17,9 @@ class OrderService
         return $this->repository->getUserOrders($userId);
     }
 
-    public function createOrderFromCart(Cart $cart, string $shippingAddress)
+    public function createOrderFromCart(Cart $cart, string $shippingAddress, string $phoneNumber, string $note)
     {
-        return DB::transaction(function () use ($cart, $shippingAddress) {
+        return DB::transaction(function () use ($cart, $shippingAddress, $phoneNumber, $note) {
             $totalAmount = $cart->items->sum(function ($item) {
                 return $item->product->price * $item->quantity;
             });
@@ -29,6 +29,8 @@ class OrderService
                 'status' => 'pending',
                 'shipping_address' => $shippingAddress,
                 'total_amount' => $totalAmount,
+                'phone_number' => $phoneNumber,
+                'note' => $note,
                 'items' => $cart->items->map(function ($item) {
                     return [
                         'product_id' => $item->product_id,

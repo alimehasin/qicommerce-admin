@@ -28,6 +28,8 @@ class OrderRepository
             'status' => $data['status'],
             'shipping_address' => $data['shipping_address'],
             'total_amount' => $data['total_amount'],
+            'phone_number' => $data['phone_number'],
+            'note' => $data['note'],
         ]);
 
         foreach ($data['items'] as $item) {

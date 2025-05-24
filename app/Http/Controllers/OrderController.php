@@ -32,6 +32,8 @@ class OrderController extends Controller
         try {
             $request->validate([
                 'shipping_address' => 'required|string',
+                'phone_number' => 'required|string',
+                'note' => 'nullable|string',
             ]);
         } catch (ValidationException $e) {
             return response()->json([
@@ -40,7 +42,7 @@ class OrderController extends Controller
             ], 422);
         }
 
-        $order = $this->service->createOrderFromCart($cart, $request->shipping_address);
+        $order = $this->service->createOrderFromCart($cart, $request->shipping_address, $request->phone_number, $request->note);
 
         return response()->json([
             'message' => 'Order created successfully',
