@@ -24,17 +24,27 @@ class StatsOverviewWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-users')
                 ->color('success'),
 
+            Stat::make('Newly Users', $this->getNewUsersToday())
+                ->description('Users registered today')
+                ->descriptionIcon('heroicon-m-user-plus')
+                ->color('info'),
+
+            Stat::make('Verified Users', $this->getVerifiedUsers())
+                ->description('User with verified email')
+                ->descriptionIcon('heroicon-m-user-plus')
+                ->color('success'),
+
             Stat::make('Total Orders', $this->getOrdersCount())
                 ->description('All orders in system')
                 ->descriptionIcon('heroicon-m-shopping-bag')
                 ->color('primary'),
 
-            Stat::make('New Users Today', $this->getNewUsersToday())
-                ->description('Users registered today')
-                ->descriptionIcon('heroicon-m-user-plus')
-                ->color('info'),
+            Stat::make('Pending Orders', $this->getPendingOrdersCount())
+                ->description('Orders with pending status')
+                ->descriptionIcon('heroicon-m-clock')
+                ->color('warning'),
 
-            Stat::make('Monthly Revenue', '$' . number_format($this->getMonthlyRevenue(), 2))
+            Stat::make('Monthly Revenue', '$' . number_format($this->getMonthlyRevenue()))
                 ->description('Revenue this month')
                 ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('success'),
@@ -46,14 +56,24 @@ class StatsOverviewWidget extends BaseWidget
         return User::count();
     }
 
+    private function getNewUsersToday(): int
+    {
+        return User::whereDate('created_at', today())->count();
+    }
+
+    private function getVerifiedUsers(): int
+    {
+        return User::where('email_verified_at', '!=', null)->count();
+    }
+
     private function getOrdersCount(): int
     {
         return Order::count();
     }
 
-    private function getNewUsersToday(): int
+    private function getPendingOrdersCount(): int
     {
-        return User::whereDate('created_at', today())->count();
+        return Order::where('status', 'pending')->count();
     }
 
     private function getMonthlyRevenue(): float
