@@ -13,7 +13,10 @@ class ProductRepository
 
     public function getPaginatedProducts(int $perPage = 10): LengthAwarePaginator
     {
-        return $this->model->with('images')->paginate($perPage);
+        return $this->model
+            ->with('images')
+            ->where('status', 'active')
+            ->paginate($perPage);
     }
 
     public function getProductById(int $id): ?Product
