@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('sku')->unique();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
+            
+            $table->index('status');
         });
 
         Schema::create('product_images', function (Blueprint $table) {

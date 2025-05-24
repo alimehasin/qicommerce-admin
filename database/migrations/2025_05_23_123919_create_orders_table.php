@@ -15,6 +15,9 @@ return new class extends Migration
             $table->integer('total_amount');
             $table->string('shipping_address');
             $table->timestamps();
+            
+            $table->index('status');
+            $table->index('user_id');
         });
 
         Schema::create('order_items', function (Blueprint $table) {
@@ -24,6 +27,8 @@ return new class extends Migration
             $table->integer('quantity');
             $table->integer('price');
             $table->timestamps();
+            
+            $table->index(['order_id', 'product_id']);
         });
     }
 
