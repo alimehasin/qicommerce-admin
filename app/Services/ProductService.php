@@ -10,9 +10,9 @@ class ProductService
     {
     }
 
-    public function getPaginatedProducts(int $perPage = 10)
+    public function getPaginatedProducts(int $perPage = 10, bool $includeOutOfStock = false)
     {
-        $products = $this->repository->getPaginatedProducts($perPage);
+        $products = $this->repository->getPaginatedProducts($perPage, $includeOutOfStock);
 
         return [
             'status' => 'success',

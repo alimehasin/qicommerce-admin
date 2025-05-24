@@ -15,7 +15,10 @@ class ProductController extends Controller
     public function index(): JsonResponse
     {
         $perPage = request()->get('per_page', 10);
-        $products = $this->productService->getPaginatedProducts($perPage);
+        $includeOutOfStock = request()->boolean('includeOutOfStock');
+
+        $products = $this->productService->getPaginatedProducts($perPage, $includeOutOfStock);
+        
 
         return response()->json($products);
     }

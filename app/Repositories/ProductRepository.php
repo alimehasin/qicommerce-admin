@@ -11,12 +11,17 @@ class ProductRepository
     {
     }
 
-    public function getPaginatedProducts(int $perPage = 10): LengthAwarePaginator
+    public function getPaginatedProducts(int $perPage = 10, bool $includeOutOfStock = false): LengthAwarePaginator
     {
-        return $this->model
+        $query = $this->model
             ->with('images')
-            ->where('status', 'active')
-            ->paginate($perPage);
+            ->where('status', 'active');
+            
+        if (!$includeOutOfStock) {
+            $query->where('stock', '>', 0);
+        }
+        
+        return $query->paginate($perPage);
     }
 
     public function getProductById(int $id): ?Product
