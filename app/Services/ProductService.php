@@ -10,9 +10,9 @@ class ProductService
     {
     }
 
-    public function getPaginatedProducts(int $perPage = 10, bool $includeOutOfStock = false)
+    public function getPaginatedProducts(int $perPage = 10, bool $includeOutOfStock = false, ?string $sortBy = null, string $sortDirection = 'asc')
     {
-        $products = $this->repository->getPaginatedProducts($perPage, $includeOutOfStock);
+        $products = $this->repository->getPaginatedProducts($perPage, $includeOutOfStock, $sortBy, $sortDirection);
 
         return [
             'status' => 'success',
@@ -24,6 +24,8 @@ class ProductService
                 'total' => $products->total(),
                 'from' => $products->firstItem(),
                 'to' => $products->lastItem(),
+                'sort_by' => $sortBy ?: 'name',
+                'sort_direction' => $sortDirection,
             ],
             'links' => [
                 'first' => $products->url(1),

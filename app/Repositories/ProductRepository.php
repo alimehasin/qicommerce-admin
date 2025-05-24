@@ -11,7 +11,7 @@ class ProductRepository
     {
     }
 
-    public function getPaginatedProducts(int $perPage = 10, bool $includeOutOfStock = false): LengthAwarePaginator
+    public function getPaginatedProducts(int $perPage = 10, bool $includeOutOfStock = false, ?string $sortBy = null, string $sortDirection = 'asc'): LengthAwarePaginator
     {
         $query = $this->model
             ->with('images')
@@ -20,6 +20,8 @@ class ProductRepository
         if (!$includeOutOfStock) {
             $query->where('stock', '>', 0);
         }
+        
+        $query->orderBy($sortBy, $sortDirection);
         
         return $query->paginate($perPage);
     }

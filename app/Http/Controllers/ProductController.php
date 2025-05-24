@@ -16,8 +16,28 @@ class ProductController extends Controller
     {
         $perPage = request()->get('per_page', 10);
         $includeOutOfStock = request()->boolean('includeOutOfStock');
+        $sortBy = request()->get('sort_by');
+        $sortDirection = request()->get('sort_direction', 'asc');
 
-        $products = $this->productService->getPaginatedProducts($perPage, $includeOutOfStock);
+        // Validate sorting parameters
+        $allowedSortFields = ['name', 'price'];
+        $allowedSortDirections = ['asc', 'desc'];
+        
+        if ($sortBy && !in_array($sortBy, $allowedSortFields)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid sort field. Allowed fields: ' . implode(', ', $allowedSortFields)
+            ], 400);
+        }
+        
+        if (!in_array(strtolower($sortDirection), $allowedSortDirections)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid sort direction. Allowed directions: ' . implode(', ', $allowedSortDirections)
+            ], 400);
+        }
+
+        $products = $this->productService->getPaginatedProducts($perPage, $includeOutOfStock, $sortBy, $sortDirection);
         
 
         return response()->json($products);
