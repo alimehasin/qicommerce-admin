@@ -23,9 +23,9 @@ Route::prefix('products')->group(function () {
 // Cart
 Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index']);
-    Route::post('/items', [CartController::class, 'addItem']);
-    Route::put('/items/{cartItem}', [CartController::class, 'updateItem']);
-    Route::delete('/items/{cartItem}', [CartController::class, 'removeItem']);
+    Route::post('/', [CartController::class, 'addItem']);
+    Route::put('/{cartItem}', [CartController::class, 'updateItem']);
+    Route::delete('/{cartItem}', [CartController::class, 'removeItem']);
 });
 
 // Order
