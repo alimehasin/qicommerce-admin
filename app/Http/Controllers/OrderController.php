@@ -42,11 +42,32 @@ class OrderController extends Controller
             ], 422);
         }
 
-        $order = $this->service->createOrderFromCart($cart, $request->shipping_address, $request->phone_number, $request->note);
+        try {
+            $order = $this->service->createOrderFromCart($cart, $request->shipping_address, $request->phone_number, $request->note);
 
-        return response()->json([
-            'message' => 'Order created successfully',
-            'data' => $order
-        ], 201);
+            return response()->json([
+                'message' => 'Order created successfully',
+                'data' => $order
+            ], 201);
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            
+            if (str_contains($errorMessage, 'Insufficient stock:')) {
+                $stockData = str_replace('Insufficient stock: ', '', $errorMessage);
+                $insufficientItems = json_decode($stockData, true);
+                
+                return response()->json([
+                    'message' => 'Insufficient stock for some items',
+                    'errors' => [
+                        'stock' => $insufficientItems
+                    ]
+                ], 409);
+            }
+            
+            return response()->json([
+                'message' => 'Failed to create order',
+                'error' => $errorMessage
+            ], 500);
+        }
     }
 }

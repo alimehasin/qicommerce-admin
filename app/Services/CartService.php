@@ -29,11 +29,19 @@ class CartService
     {
         $product = $this->productRepository->getProductById($productId);
         
-        if ($product->stock < $quantity) {
-            throw new \Exception('Insufficient stock available. Only ' . $product->stock . ' items left in stock.');
+        if (!$product) {
+            throw new \Exception('Product not found.');
         }
 
         $cart = $this->getOrCreateCart($user);
+        
+        $existingCartItem = $cart->items()->where('product_id', $productId)->first();
+        $totalQuantity = $quantity + ($existingCartItem ? $existingCartItem->quantity : 0);
+        
+        if ($product->stock < $totalQuantity) {
+            throw new \Exception('Insufficient stock available. Only ' . $product->stock . ' items left in stock. You currently have ' . ($existingCartItem ? $existingCartItem->quantity : 0) . ' in your cart.');
+        }
+
         return $this->cartRepository->addItem($cart, $productId, $quantity);
     }
 
