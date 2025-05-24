@@ -17,6 +17,7 @@ class OrderRepository
         return $this->model
             ->with(['items', 'user'])
             ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
             ->latest()
             ->get();
     }
