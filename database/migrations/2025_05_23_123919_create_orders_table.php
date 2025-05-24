@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
-            $table->decimal('total_amount', 10, 2);
+            $table->integer('total_amount');
             $table->string('shipping_address');
             $table->timestamps();
         });
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->integer('price');
             $table->timestamps();
         });
     }
