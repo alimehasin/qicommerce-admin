@@ -9,6 +9,8 @@ use App\Models\Order;
 
 class StatsOverviewWidget extends BaseWidget
 {
+    protected static ?string $pollingInterval = '5s';
+
     protected function getColumns(): int
     {
         return 3;
