@@ -82,6 +82,7 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number')
                     ->searchable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
