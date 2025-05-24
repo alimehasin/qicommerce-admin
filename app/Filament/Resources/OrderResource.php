@@ -17,14 +17,17 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
-
-    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->required()
+                    ->disabled(),
+
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -35,13 +38,28 @@ class OrderResource extends Resource
                     ])
                     ->required()
                     ->default('pending'),
+
+                Forms\Components\TextInput::make('total_amount')
+                    ->required()
+                    ->numeric()
+                    ->disabled(),
+                Forms\Components\TextInput::make('shipping_address')
+                    ->required()
+                    ->maxLength(255)
+                    ->disabled(),
+                Forms\Components\TextInput::make('phone_number')
+                    ->tel()
+                    ->maxLength(20)
+                    ->disabled(),
+                Forms\Components\Textarea::make('note')
+                    ->columnSpanFull()
+                    ->disabled(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
@@ -53,10 +71,6 @@ class OrderResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('shipping_address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('note')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -65,6 +79,8 @@ class OrderResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('phone_number')
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -76,9 +92,6 @@ class OrderResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->headerActions([
-                // Explicitly empty to remove the default Create action
             ]);
     }
 
@@ -93,6 +106,7 @@ class OrderResource extends Resource
     {
         return [
             'index' => Pages\ListOrders::route('/'),
+            'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
