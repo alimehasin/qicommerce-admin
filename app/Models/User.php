@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Panel;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -56,5 +57,10 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return str_ends_with($this->email, '@qi.iq') && $this->hasVerifiedEmail();
     }
 }
